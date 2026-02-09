@@ -4,7 +4,7 @@ This document describes how `Project Newcastle (PNC)` aligns with the SLSA speci
 
 We use the SLSA framework as a guide for reinforcing the `PNC` build process, to better secure the Red Hat and IBM software supply chain during the build of Middleware products. 
 
-Our commitment to security means that `PNC` conforms to the link:https://slsa.dev/spec/v1.2/build-track-basics#build-l3-hardened-builds[SLSA v1.2 Build Level 3] requirements.
+Our commitment to security means that `PNC` conforms to the link:https://slsa.dev/spec/v1.2/build-track-basics#build-l3-hardened-builds[SLSA v1.2 Build Level 3] requirements. As of the v1.2 specification, Build Level 3 (L3) is the highest Build Level.
 
 
 == Supply-chain Levels for Software Artifacts (SLSA) Overview
@@ -12,26 +12,24 @@ Our commitment to security means that `PNC` conforms to the link:https://slsa.de
 
 SLSA organizes requirements into independent *tracks*. Each track addresses a different part of the software lifecycle and defines levels that represent increasing guarantees. This structure allows organizations to incrementally improve assurance in one area independently from the other areas, assessing maturity and communicating compliance transparently.
 
-SLSA relies on several foundational concepts:
+=== SLSA v1.2
+Version 1.2 introduces a major evolution of the specification by expanding beyond *build security* to include *source integrity*:
+
+* **Build Track** — assurance that artifacts were built correctly and that provenance describing the build is trustworthy  
+* **Source Track** — assurance that the source code and change history are trustworthy and governed by appropriate controls  
+
+The addition of the Source Track makes SLSA a more complete supply chain framework spanning development through build and distribution. Before expanding more on the different tracks, we need to clarify a few foundational concepts on which SLSA relies on:
 
 * **Artifact** — output produced by a build (e.g., binaries, images)  
-* **Provenance** — metadata describing how an artifact was built  
+* **Provenance** — metadata describing how an artifact was built or how the source code was created and modified over time (link:https://slsa.dev/spec/v1.2/provenance[SLSA v1.2 Spec]) 
 * **Attestation** — cryptographically signed record asserting provenance  
 * **Digest** — cryptographic identifier of an artifact  
 
 These mechanisms enable verification that artifacts have not been altered and originate from expected inputs and processes.
 
-== SLSA v1.2
-Version 1.2 introduces a major evolution of the specification by expanding beyond build security to include source integrity:
+==== Build Track
 
-* **Build Track** — assurance that artifacts were built correctly and that provenance describing the build is trustworthy  
-* **Source Track** — assurance that the source code and change history are trustworthy and governed by appropriate controls  
-
-The addition of the Source Track makes SLSA a more complete supply chain framework spanning development through build and distribution.
-
-=== Build Track
-
-The Build Track measures confidence in how artifacts are produced and documented through provenance.
+The link:https://slsa.dev/spec/v1.2/build-track-basics[Build Track] measures confidence in how artifacts are produced and documented through provenance.
 
 Level progression:
 
@@ -50,9 +48,9 @@ Level progression:
 
 These levels primarily address mistakes, post-build tampering, and runtime interference in the build environment. :contentReference[oaicite:3]{index=3}  
 
-=== Source Track
+==== Source Track
 
-The Source Track measures trust in how source revisions are created and governed. It establishes confidence in repository controls, history integrity, and review practices, enabling consumers to verify whether a revision meets their standards. :contentReference[oaicite:4]{index=4}  
+The link:https://slsa.dev/spec/v1.2/source-requirement[Source Track] measures trust in how source revisions are created and governed. It establishes confidence in repository controls, history integrity, and review practices, enabling consumers to verify whether a revision meets their standards. :contentReference[oaicite:4]{index=4}  
 
 Typical progression includes:
 
