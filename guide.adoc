@@ -1,14 +1,12 @@
 = Project Newcastle (PNC) Alignment with SLSA requirements
 
-This document describes how `Project Newcastle (PNC)` aligns with the SLSA specification. link:https://slsa.dev/[Supply-chain Levels for Software Artifacts (SLSA)] is a security framework that defines progressive levels of assurance for software supply chains. It provides a common language and set of controls that help organizations demonstrate that software artifacts were built and produced in a trustworthy manner and can be traced back to their origin. The framework is designed to reduce the risk of tampering, unauthorized modification, and supply chain attacks.
-
-We use the SLSA framework as a guide for reinforcing the `PNC` build process, to better secure the Red Hat and IBM software supply chain during the build of Middleware products. 
+This document describes how `Project Newcastle (PNC)` aligns with the SLSA specification. We use the SLSA framework as a guide for reinforcing the `PNC` build process, to better secure the Red Hat and IBM software supply chain during the build of Middleware products. 
 
 Our commitment to security means that `PNC` conforms to the link:https://slsa.dev/spec/v1.2/build-track-basics#build-l3-hardened-builds[SLSA v1.2 Build Level 3] requirements. As of the v1.2 specification, Build Level 3 (L3) is the highest Build Level.
 
 
 == Supply-chain Levels for Software Artifacts (SLSA) Overview
-
+link:https://slsa.dev/[Supply-chain Levels for Software Artifacts (SLSA)] is a security framework that defines progressive levels of assurance for software supply chains. It provides a common language and set of controls that help organizations demonstrate that software artifacts were built and produced in a trustworthy manner and can be traced back to their origin. The framework is designed to reduce the risk of tampering, unauthorized modification, and supply chain attacks.
 
 SLSA organizes requirements into independent *tracks*. Each track addresses a different part of the software lifecycle and defines levels that represent increasing guarantees. This structure allows organizations to incrementally improve assurance in one area independently from the other areas, assessing maturity and communicating compliance transparently.
 
