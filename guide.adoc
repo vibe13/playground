@@ -57,7 +57,7 @@ In its Build Levels, SLSA evaluates provenance based on three questions:
 
 Completeness of provenance comes from its attestation format, and authenticity derives from the signature.
 
-Accuracy is where provenance and build isolation intersect. To generate unforgeable provenance, build platforms must store those secret materials in a secure management system that platform users cannot access. In `PNC`, only **??????????????? ---Tekton Chains---** , which generates and signs provenance, has access to the private key.
+Accuracy is where provenance and build isolation intersect. To generate unforgeable provenance, build platforms must store those secret materials in a secure management system that platform users cannot access. In `PNC` only the Orchestrator service, which generates and signs provenance, has access to the private key.
 
 
 ==== Build isolation
