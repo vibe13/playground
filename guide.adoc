@@ -1,8 +1,9 @@
 = Project Newcastle (PNC) Alignment with SLSA requirements
+:toc:
 
-This document describes how `Project Newcastle (PNC)` aligns with the SLSA specification. We use the SLSA framework as a guide for reinforcing the `PNC` build process, to better secure the Red Hat and IBM software supply chain during the build of Middleware products. 
+This document describes how the _Build Platform_ `Project Newcastle (PNC)` aligns with the SLSA specification. We use the SLSA framework as a guide for reinforcing the `PNC` build process, to better secure the Red Hat and IBM software supply chain during the build of Middleware products. 
 
-Our commitment to security means that `PNC` conforms to the link:https://slsa.dev/spec/v1.2/build-track-basics#build-l3-hardened-builds[SLSA v1.2 Build Level 3] requirements. As of the v1.2 specification, Build Level 3 (L3) is the highest Build Level.
+Our commitment to security means that _Build Platform_ `PNC` conforms to the link:https://slsa.dev/spec/v1.2/build-track-basics#build-l3-hardened-builds[SLSA v1.2 Build Level 3] requirements. As of the v1.2 specification, Build Level 3 (L3) is the highest Build Level.
 
 
 == Supply-chain Levels for Software Artifacts (SLSA) Overview
@@ -10,72 +11,69 @@ link:https://slsa.dev/[Supply-chain Levels for Software Artifacts (SLSA)] is a s
 
 SLSA organizes requirements into independent *tracks*. Each track addresses a different part of the software lifecycle and defines levels that represent increasing guarantees. This structure allows organizations to incrementally improve assurance in one area independently from the other areas, assessing maturity and communicating compliance transparently.
 
-=== SLSA v1.2
-Version 1.2 introduces a major evolution of the specification by expanding beyond *build security* to include *source integrity*:
+SLSA v1.2 link:https://slsa.dev/spec/v1.2/whats-new[introduces] a major evolution of the specification by expanding beyond *build security* to include *source integrity*:
 
-* **Build Track** — assurance that artifacts were built correctly and that provenance describing the build is trustworthy  
-* **Source Track** — assurance that the source code and change history are trustworthy and governed by appropriate controls  
+* link:https://slsa.dev/spec/v1.2/build-track-basics[Build Track] — assurance that artifacts were built correctly and that provenance describing the build is trustworthy  
+* link:https://slsa.dev/spec/v1.2/source-requirements[Source Track] — assurance that the source code and change history are trustworthy and governed by appropriate controls  
 
-The addition of the Source Track makes SLSA a more complete supply chain framework spanning development through build and distribution. Before expanding more on the different tracks, we need to clarify a few foundational concepts on which SLSA relies on:
+The addition of the Source Track makes SLSA a more complete supply chain framework spanning development through build and distribution. 
 
-* **Artifact** — output produced by a build (e.g., binaries, images)  
-* **Provenance** — metadata describing how an artifact was built or how the source code was created and modified over time (link:https://slsa.dev/spec/v1.2/provenance[SLSA v1.2 Spec]) 
-* **Attestation** — cryptographically signed record asserting provenance  
-* **Digest** — cryptographic identifier of an artifact  
+=== Build Track
 
-These mechanisms enable verification that artifacts have not been altered and originate from expected inputs and processes.
+In order to produce artifacts with a specific build level, responsibility is split between the link:https://slsa.dev/spec/v1.2/build-requirements#producer[*Producer*] and link:https://slsa.dev/spec/v1.2/build-requirements#build-platform[*Build Platform*]. The _Build Platform_ MUST strengthen the security controls in order to achieve a specific level while the _Producer_ MUST choose and adopt a build platform capable of achieving a desired build level, implementing any controls as specified by the chosen platform.
 
-==== Build Track
+==== Build Platforms responsibilities
+For Build Platforms like `PNC` the SLSA Build (v1.2) specification assigns two primary responsibilities: 
 
-The link:https://slsa.dev/spec/v1.2/build-track-basics[Build Track] measures confidence in how artifacts are produced and documented through provenance.
+* *Provenance* to describe how the platform built each software artifact
+* *Build isolation* to prevent tampering with the build process
 
-Level progression:
+SLSA also includes three Build Levels, which provide you with increasing guarantees about how build platforms fulfill these responsibilities. Any build platform that generates provenance conforms to the SLSA framework’s Build Level 1 (L1) specifications. Build platforms produce artifacts with higher Build Levels by hardening provenance against forgery and by isolating the build process. As of the v1.2 specification, Build Level 3 (L3) is the highest Build Level. `PNC` produces Build L3 artifacts.
 
-|===
-| Level | Goal
+[NOTE]
+====
+The rest of this document further explains key responsibilities, provenance and build isolation, and how `PNC` fulfills those responsibilities. It concludes with a table summarizing how `PNC` meets the requirements for SLSA Build L3.
+====
 
-| L1
-| Provenance exists describing the build
+==== SLSA Provenance
 
-| L2
-| Provenance is signed and generated by a hosted platform
+In the context of its framework, link:https://slsa.dev/spec/v1.2/provenance[SLSA defines] provenance as “the verifiable information about software artifacts describing where, when and how something was produced.” SLSA provenance is a type of attestation, and for higher Build Levels, build platforms like `PNC` must sign that attestation.
 
-| L3
-| Hardened build platform prevents tampering during builds
-|===
+===== Attestation
 
-These levels primarily address mistakes, post-build tampering, and runtime interference in the build environment. :contentReference[oaicite:3]{index=3}  
+You can think of attestation like a recipe: a recipe tells you how someone made a certain dish, and attestation tells you how a build platform created a software artifact. SLSA provenance is a form of attestation. The SLSA provenance that `PNC` provides includes a subject that tells you which artifact the attestation belongs to, and a predicate that explains how `PNC` built each artifact, including relevant links.
 
-==== Source Track
+===== Signing the attestation
 
-The link:https://slsa.dev/spec/v1.2/source-requirement[Source Track] measures trust in how source revisions are created and governed. It establishes confidence in repository controls, history integrity, and review practices, enabling consumers to verify whether a revision meets their standards. :contentReference[oaicite:4]{index=4}  
+At higher Build Levels, SLSA directs build platforms to harden their provenance by signing each attestation. With the signature, you can verify that no one tampered with the attestation for your artifacts. Currently, `PNC` signs attestations using a private key.
 
-Typical progression includes:
+===== Evaluating provenance
 
-* Version-controlled immutable history  
-* Verified change provenance and protections  
-* Continuous enforcement of technical controls  
-* Two-party review enforcement  
+In its Build Levels, SLSA evaluates provenance based on three questions:
 
-This track addresses threats originating before the build process, such as unauthorized commits or repository misconfiguration. :contentReference[oaicite:5]{index=5}  
+* Completeness: Does the provenance fully explain how the artifact was built?
+* Authenticity: How certain are you that the provenance came from the builder?
+* Accuracy: How difficult is it to tamper with provenance during the build process?
 
----
+Completeness of provenance comes from its attestation format, and authenticity derives from the signature.
 
-== Build isolation
+Accuracy is where provenance and build isolation intersect. To generate unforgeable provenance, build platforms must store those secret materials in a secure management system that platform users cannot access. In `PNC`, only **??????????????? ---Tekton Chains---** , which generates and signs provenance, has access to the private key.
+
+
+==== Build isolation
 
 One of the primary responsibilities defined by the SLSA Build Track is ensuring artifacts are produced without unauthorized influence. This is achieved through the use of hosted and isolated build environments that generate trustworthy provenance.
 
 At Build Level 2, builds must execute on a hosted platform that generates signed provenance.  
-At Build Level 3, the platform must enforce strong isolation and tamper protections during execution. :contentReference[oaicite:6]{index=6}  
+At Build Level 3, the platform must enforce strong isolation and tamper protections during execution.
 
-=== Hosted builds
+===== Hosted
 
 Executing builds on individual workstations introduces inconsistency and risk. Local environments may contain untracked dependencies, configuration drift, or malware that can affect outputs.
 
-SLSA therefore requires builds to run on a hosted build platform rather than developer machines. This reduces attack surface and enables auditing and standardization of build environments. :contentReference[oaicite:7]{index=7}  
+To shrink the attack plane, SLSA dictates that builds should execute “using a hosted build platform on shared or dedicated infrastructure, not on an individual’s workstation.” By using an environment that comes from a known, auditable state, build platforms can largely ensure that they generate artifacts in the same way every time.
 
-{ProductName} satisfies this requirement by operating as a hosted build platform.  
-Builds are executed on Amazon Web Services through Red Hat OpenShift Service on AWS (ROSA), providing controlled infrastructure with reproducible baseline environments.
+_PNC_ satisfies this requirement by operating as a hosted build platform. Builds are executed on IBM Cloud through Red Hat OpenShift Container Platform, providing controlled infrastructure with reproducible baseline environments.
 
 This approach supports:
 
@@ -84,7 +82,7 @@ This approach supports:
 * Infrastructure auditability  
 * Reduced exposure to workstation compromise  
 
-=== Internal build isolation
+===== Internally isolated
 
 While hosted execution protects against local workstation threats, additional safeguards are required to prevent interference within the platform itself.
 
@@ -94,13 +92,13 @@ Build Level 3 emphasizes hardened platforms that:
 * Protect signing materials from user workloads  
 * Limit cross-tenant or insider tampering  
 
-These controls ensure that forging provenance or altering artifacts requires exploiting platform vulnerabilities rather than simple access or configuration manipulation. :contentReference[oaicite:8]{index=8}  
+These controls ensure that forging provenance or altering artifacts requires exploiting platform vulnerabilities rather than simple access or configuration manipulation.
 
-{ProductName} enforces internal isolation through multiple mechanisms:
+_PNC_ enforces internal isolation through multiple mechanisms:
 
 * Builds execute in ephemeral pods, preventing persistence between runs  
 * Namespaced separation between user workloads and provenance services  
-* Tekton Chains signs provenance outside user-controlled execution contexts  
+* Provenance is signed outside user-controlled execution contexts  
 
 This architecture:
 
@@ -108,6 +106,32 @@ This architecture:
 * Protects attestation signing keys  
 * Ensures provenance authenticity  
 * Aligns with hardened build platform objectives  
+
+
+=== Source Track
+
+The link:https://slsa.dev/spec/v1.2/source-requirements[Source Track] measures trust in how source revisions are created, managed, and governed. It establishes confidence in repository protections, history integrity, and review controls, enabling consumers to determine whether a revision meets their security and compliance expectations.
+
+Level progression:
+
+|===
+| Level | Goal
+
+| L1
+| Source is version controlled and traceable
+
+| L2
+| Source history is immutable and protected against tampering
+
+| L3
+| Changes require enforced review and provenance is available for revisions
+
+| L4
+| Strong technical controls ensure verified, two-party reviewed changes
+|===
+
+These levels address risks originating before the build process, including unauthorized commits, repository misconfiguration, or insufficient change governance.
+
 
 ---
 
@@ -122,3 +146,4 @@ The following sections (to be added) map `{ProductName}` capabilities to:
 * Platform assessment criteria  
 
 These mappings provide traceable evidence of SLSA alignment.
+
