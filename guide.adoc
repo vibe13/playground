@@ -108,8 +108,7 @@ The Source Track measures trust in how source revisions are governed.
 | Strong technical enforcement of two-party review
 |===
 
-{ProductName} operates as a Build Platform and does not control repository governance.  
-Source Track requirements are therefore outside scope of this evaluation.
+⚠️ {ProductName} operates as a Build Platform and does not control repository governance. Source Track requirements are therefore outside scope of this evaluation.
 
 == {ProductName} Build Architecture
 
