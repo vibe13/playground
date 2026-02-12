@@ -239,7 +239,7 @@ a|Provenance in {ProductName} is:
 * The Orchestrator Service is responsible for the provenance generation, and is separated from execution environments used by tenant workloads.
 * Almost complete (missing or improved external parameters will be addressed in link:https://issues.redhat.com/browse/NCL-7025[NCL-7025 (Rebuild Mode)] and link:https://issues.redhat.com/browse/NCL-9516[NCL-9516 (Build environment digests)]).
 
-ℹ️ At the time of writing, it's not determined if the Orchestrator Service will actually generate the provenance, or provide all the required data to a delegated Service for the generation. This is however inline with the Level 2 requirements: "The data in the provenance MUST be obtained from the build platform, either because the generator is the build platform or because the provenance generator reads the data directly from the build platform".
+ℹ️ At the time of writing, it's not determined if the Orchestrator Service will actually generate and sign the provenance, or provide all the required data to a delegated Service. This is however inline with the Level 2 requirements: "The data in the provenance MUST be obtained from the build platform, either because the generator is the build platform or because the provenance generator reads the data directly from the build platform".
 
 ** IMPROVE: the attestations will be stored in Quay.io in a dedicated organization.
 ** CLARIFY: does the organization ^ need to be public? how that would become a risk in making the provenance information public? if it needs to be private, hoe could I make the user validate the provenance via an intermediate service?
